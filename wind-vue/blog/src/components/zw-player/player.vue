@@ -254,6 +254,7 @@ export default {
       listButtonActiveIndex: -1,
       thisListPage: 1,
       musicTypeList: [
+        { name: "云云", id: 484677185 },
         { name: "热歌榜", id: 3778678 },
         { name: "新歌榜", id: 3779629 },
         { name: "飙升榜", id: 19723756 },
@@ -277,7 +278,7 @@ export default {
     this.Player();
   },
   created() {
-    this._getMusicType(3778678);
+    this._getMusicType(484677185);
     this.DisAuthorInfo(); //禁删~感谢配合
   },
   computed: {
