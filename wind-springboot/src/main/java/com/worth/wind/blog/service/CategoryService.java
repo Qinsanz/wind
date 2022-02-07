@@ -56,6 +56,6 @@ public interface CategoryService extends IService<Category> {
      *
      * @param categoryVO 分类
      */
-    void saveOrUpdateCategory(CategoryVO categoryVO);
+    Integer saveOrUpdateCategory(CategoryVO categoryVO);
 
 }

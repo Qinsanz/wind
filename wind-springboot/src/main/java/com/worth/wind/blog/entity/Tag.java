@@ -46,4 +46,11 @@ public class Tag {
     @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
 
+
+    /**
+     * 分类id
+     */
+    private Integer categoryId;
+
+
 }

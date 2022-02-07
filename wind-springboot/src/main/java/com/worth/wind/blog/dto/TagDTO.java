@@ -29,4 +29,9 @@ public class TagDTO {
      */
     private String tagName;
 
+    /**
+     * 分类id
+     */
+    private Integer categoryId;
+
 }

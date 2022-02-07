@@ -76,8 +76,7 @@ public class TagController {
     @ApiOperation(value = "添加或修改标签")
     @PostMapping("/admin/tags")
     public Result<?> saveOrUpdateTag(@Valid @RequestBody TagVO tagVO) {
-        tagService.saveOrUpdateTag(tagVO);
-        return Result.ok();
+        return Result.ok(tagService.saveOrUpdateTag(tagVO));
     }
 
     /**

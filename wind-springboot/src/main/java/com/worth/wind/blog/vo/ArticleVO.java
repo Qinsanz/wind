@@ -84,4 +84,10 @@ public class ArticleVO {
     @ApiModelProperty(name = "status", value = "文章状态", dataType = "String")
     private Integer status;
 
+    /**
+     * 文章导入路径
+     */
+    @ApiModelProperty(name = "importUrl", value = "文章导入路径", dataType = "String")
+    private String importUrl;
+
 }

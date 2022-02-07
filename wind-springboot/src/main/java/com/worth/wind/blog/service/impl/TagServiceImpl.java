@@ -16,6 +16,7 @@ import com.worth.wind.blog.service.TagService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.worth.wind.common.util.BeanCopyUtils;
 import com.worth.wind.blog.vo.TagVO;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,16 +84,19 @@ public class TagServiceImpl extends ServiceImpl<TagDao, Tag> implements TagServi
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void saveOrUpdateTag(TagVO tagVO) {
+    public Integer saveOrUpdateTag(TagVO tagVO) {
         // 查询标签名是否存在
         Tag existTag = tagDao.selectOne(new LambdaQueryWrapper<Tag>()
                 .select(Tag::getId)
-                .eq(Tag::getTagName, tagVO.getTagName()));
+                .eq(Tag::getTagName, tagVO.getTagName())
+                .eq(tagVO.getCategoryId()!=null,Tag::getCategoryId,tagVO.getCategoryId()));
         if (Objects.nonNull(existTag) && !existTag.getId().equals(tagVO.getId())) {
-            throw new BizException("标签名已存在");
+            log.warn("标签已存在！");
+            return existTag.getId();
         }
         Tag tag = BeanCopyUtils.copyObject(tagVO, Tag.class);
         this.saveOrUpdate(tag);
+        return tag.getId();
     }
 
 }

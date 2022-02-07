@@ -228,10 +228,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveOrUpdateArticle(ArticleVO articleVO) {
-        // 保存文章分类
-        Category category = saveArticleCategory(articleVO);
+        // 查询标文章是否存在
+        Article articleCheck = articleDao.selectOne(new LambdaQueryWrapper<Article>()
+                .eq(Article::getIsDelete,FALSE)
+                .eq(Article::getImportUrl, articleVO.getImportUrl()));
         // 保存或修改文章
         Article article = BeanCopyUtils.copyObject(articleVO, Article.class);
+        // 如果是导入文章 只修改导入的内容
+        if(articleCheck!=null){
+            articleCheck.setArticleContent(article.getArticleContent());
+            article = BeanCopyUtils.copyObject(articleCheck, Article.class);
+            //标签去重
+            articleVO.setId(articleCheck.getId());
+        }
+        // 保存文章分类
+        Category category = saveArticleCategory(articleVO);
         if (Objects.nonNull(category)) {
             article.setCategoryId(category.getId());
         }

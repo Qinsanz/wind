@@ -2,6 +2,9 @@ package com.worth.wind.common.handler;
 
 import com.worth.wind.blog.dao.RoleDao;
 import com.worth.wind.blog.dto.ResourceRoleDTO;
+import com.worth.wind.blog.service.RedisService;
+import com.worth.wind.blog.service.impl.UserDetailsServiceImpl;
+import com.worth.wind.common.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -12,6 +15,8 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,6 +37,13 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
     @Autowired
     private RoleDao roleDao;
 
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+    @Resource
+    private HttpServletRequest request;
+
     /**
      * 加载资源角色信息
      */
@@ -49,6 +61,9 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+        //todo 从redis取用户信息 存到Authentication
+        UserUtils.setAuthentication(request,redisService,userDetailsService);
+
         // 修改接口角色关系后重新加载
         if (CollectionUtils.isEmpty(resourceRoleList)) {
             this.loadDataSource();

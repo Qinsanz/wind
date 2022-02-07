@@ -91,4 +91,9 @@ public class Article {
     @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
 
+    /**
+     * 文章导入路径
+     */
+    private String importUrl;
+
 }
