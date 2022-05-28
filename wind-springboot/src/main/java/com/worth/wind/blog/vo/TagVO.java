@@ -35,4 +35,10 @@ public class TagVO {
     @ApiModelProperty(name = "categoryName", value = "标签名", required = true, dataType = "String")
     private String tagName;
 
+    /**
+     * 分类id
+     */
+    @ApiModelProperty(name = "categoryId", value = "分类id", dataType = "Integer")
+    private Integer categoryId;
+
 }

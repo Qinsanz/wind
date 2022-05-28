@@ -38,4 +38,9 @@ public class TagBackDTO {
      */
     private LocalDateTime createTime;
 
+    /**
+     * 分类id
+     */
+    private Integer categoryId;
+
 }

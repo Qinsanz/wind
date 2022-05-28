@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+import static com.worth.wind.common.constant.CommonConst.FALSE;
+
 
 /**
  * 分类服务
@@ -70,7 +72,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> impl
     public void deleteCategory(List<Integer> categoryIdList) {
         // 查询分类id下是否有文章
         Integer count = articleDao.selectCount(new LambdaQueryWrapper<Article>()
-                .in(Article::getCategoryId, categoryIdList));
+                .in(Article::getCategoryId, categoryIdList).eq(Article::getIsDelete, FALSE));
         if (count > 0) {
             throw new BizException("删除失败，该分类下存在文章");
         }
@@ -79,19 +81,21 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> impl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void saveOrUpdateCategory(CategoryVO categoryVO) {
+    public Integer saveOrUpdateCategory(CategoryVO categoryVO) {
         // 判断分类名重复
         Category existCategory = categoryDao.selectOne(new LambdaQueryWrapper<Category>()
                 .select(Category::getId)
                 .eq(Category::getCategoryName, categoryVO.getCategoryName()));
         if (Objects.nonNull(existCategory) && !existCategory.getId().equals(categoryVO.getId())) {
-            throw new BizException("分类名已存在");
+            log.warn("分类名已存在");
+            return existCategory.getId();
         }
         Category category = Category.builder()
                 .id(categoryVO.getId())
                 .categoryName(categoryVO.getCategoryName())
                 .build();
         this.saveOrUpdate(category);
+        return category.getId();
     }
 
 }

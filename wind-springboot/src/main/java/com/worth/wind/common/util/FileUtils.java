@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -99,6 +101,31 @@ public class FileUtils {
             accuracy = 0.4;
         }
         return accuracy;
+    }
+
+    /**
+     * @Author：
+     * @Description：获取某个目录下所有文件、文件夹
+     * @Date：
+     */
+    public static List<String> getFiles(String path,boolean isFile) {
+        List<String> files = new ArrayList<String>();
+        File file = new File(path);
+        File[] tempList = file.listFiles();
+
+        for (int i = 0; i < tempList.length; i++) {
+            String fileName=tempList[i].toString();
+            if (tempList[i].isFile() && isFile) {
+                //文件名
+                files.add(fileName);
+            }
+            if (tempList[i].isDirectory() && !isFile) {
+                //文件夹名
+                files.add(fileName);
+            }
+
+        }
+        return files;
     }
 
 }

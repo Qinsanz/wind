@@ -27,7 +27,11 @@ public enum FileExtEnum {
     /**
      * wav文件
      */
-    WAV(".wav", "wav文件");
+    WAV(".wav", "wav文件"),
+    /**
+     * md文件
+     */
+    MD(".md", "md文件");
 
     /**
      * 获取文件格式

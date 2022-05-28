@@ -1,7 +1,10 @@
 package com.worth.wind.common.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.worth.wind.blog.service.RedisService;
 import com.worth.wind.blog.vo.Result;
+import com.worth.wind.common.util.UserUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -19,10 +22,15 @@ import java.io.IOException;
 @Component
 public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
 
+    @Autowired
+    private RedisService redisServicel;
+
     @Override
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
         httpServletResponse.setContentType("application/json;charset=UTF-8");
         httpServletResponse.getWriter().write(JSON.toJSONString(Result.ok()));
+        //todo 退出清空缓存
+        UserUtils.delAuthentication(httpServletRequest,redisServicel);
     }
 
 }

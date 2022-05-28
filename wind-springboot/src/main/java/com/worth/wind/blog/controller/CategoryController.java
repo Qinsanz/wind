@@ -77,8 +77,7 @@ public class CategoryController {
     @ApiOperation(value = "添加或修改分类")
     @PostMapping("/admin/categories")
     public Result<?> saveOrUpdateCategory(@Valid @RequestBody CategoryVO categoryVO) {
-        categoryService.saveOrUpdateCategory(categoryVO);
-        return Result.ok();
+        return Result.ok(categoryService.saveOrUpdateCategory(categoryVO));
     }
 
     /**

@@ -53,6 +53,6 @@ public interface TagService extends IService<Tag> {
      *
      * @param tagVO 标签
      */
-    void saveOrUpdateTag(TagVO tagVO);
+    Integer saveOrUpdateTag(TagVO tagVO);
 
 }

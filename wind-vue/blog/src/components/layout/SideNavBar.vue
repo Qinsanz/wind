@@ -44,6 +44,10 @@
     <!-- 页面导航 -->
     <div class="menu-container">
       <div class="menus-item">
+          <a href="https://www.music.qinsanz.cn/">
+          <i class="iconfont iconqita" /> YesPlayMusic</a>
+      </div>
+      <div class="menus-item">
         <router-link to="/">
           <i class="iconfont iconzhuye" /> 首页
         </router-link>

@@ -10,12 +10,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * 博客启动类
+ * 启动类
  *
  * @author yezhiqiu
  * @date 2021/08/14
  */
-@MapperScan("com.worth.wind.blog.dao")
+@MapperScan({"com.worth.wind.**.dao"})
 @SpringBootApplication
 @EnableScheduling
 public class WindApplication {

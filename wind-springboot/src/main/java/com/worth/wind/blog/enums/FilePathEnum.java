@@ -29,6 +29,10 @@ public enum FilePathEnum {
      */
     PHOTO("photos/","相册路径"),
     /**
+     * PicGo  图片路径
+     */
+    IMG("img/","PicGo路径"),
+    /**
      * 配置图片路径
      */
     CONFIG("config/","配置图片路径"),
