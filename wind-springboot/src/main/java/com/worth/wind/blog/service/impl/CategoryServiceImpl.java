@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+import static com.worth.wind.common.constant.CommonConst.FALSE;
+
 
 /**
  * 分类服务
@@ -70,7 +72,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> impl
     public void deleteCategory(List<Integer> categoryIdList) {
         // 查询分类id下是否有文章
         Integer count = articleDao.selectCount(new LambdaQueryWrapper<Article>()
-                .in(Article::getCategoryId, categoryIdList));
+                .in(Article::getCategoryId, categoryIdList).eq(Article::getIsDelete, FALSE));
         if (count > 0) {
             throw new BizException("删除失败，该分类下存在文章");
         }

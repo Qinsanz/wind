@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -228,19 +229,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveOrUpdateArticle(ArticleVO articleVO) {
-        // 查询标文章是否存在
-        Article articleCheck = articleDao.selectOne(new LambdaQueryWrapper<Article>()
-                .eq(Article::getIsDelete,FALSE)
-                .eq(Article::getImportUrl, articleVO.getImportUrl()));
         // 保存或修改文章
         Article article = BeanCopyUtils.copyObject(articleVO, Article.class);
-        // 如果是导入文章 只修改导入的内容
-        if(articleCheck!=null){
-            articleCheck.setArticleContent(article.getArticleContent());
-            article = BeanCopyUtils.copyObject(articleCheck, Article.class);
-            //标签去重
-            articleVO.setId(articleCheck.getId());
-        }
+        // 文章导入
+        article=importArticle(article,articleVO);
         // 保存文章分类
         Category category = saveArticleCategory(articleVO);
         if (Objects.nonNull(category)) {
@@ -250,6 +242,30 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         articleService.saveOrUpdate(article);
         // 保存文章标签
         saveArticleTag(articleVO, article.getId());
+    }
+
+    /**
+     * 文章导入 数据封装
+     * @param article
+     * @param articleVO
+     */
+    private Article importArticle(Article article,ArticleVO articleVO){
+        //校验去除斜杠
+        String fileUrl=articleVO.getImportUrl().replace("/","").replace("\\","");
+        // 查询标文章是否存在
+        Article articleCheck = articleDao.selectOne(new LambdaQueryWrapper<Article>()
+                //有些文章不想显示  删掉了也更新步
+                //.eq(Article::getIsDelete,FALSE)
+                .apply(String.format(" REPLACE(import_url,'\\\\','') like '%%%s%%'",fileUrl)));
+        // 如果是导入文章 只修改导入的内容
+        if(articleCheck!=null){
+            articleCheck.setArticleContent(article.getArticleContent());
+            article = BeanCopyUtils.copyObject(articleCheck, Article.class);
+            article.setUpdateTime(LocalDateTime.now());
+            //标签去重
+            articleVO.setId(articleCheck.getId());
+        }
+        return article;
     }
 
     /**

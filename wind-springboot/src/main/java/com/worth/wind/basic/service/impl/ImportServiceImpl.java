@@ -16,6 +16,7 @@ import com.worth.wind.blog.service.TagService;
 import com.worth.wind.blog.vo.*;
 import com.worth.wind.common.util.BeanCopyUtils;
 import com.worth.wind.common.util.FileUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ import static com.worth.wind.common.constant.CommonConst.FALSE;
  * @author Qinsanz
  * @date 2022/2/6
  */
+@Log4j2
 @Service
 public class ImportServiceImpl extends ServiceImpl<ImportDao, ImportEntity> implements ImportService {
 
@@ -55,7 +57,8 @@ public class ImportServiceImpl extends ServiceImpl<ImportDao, ImportEntity> impl
         if(StringUtils.isNotBlank(importFileUrl)){
             List<String> directoryList=FileUtils.getFiles(importFileUrl,false);
             for (String directoryUrl : directoryList) {
-                String[] files=directoryUrl.split("\\\\");
+                String split=directoryUrl.contains("/")?"/":"\\\\";
+                String[] files=directoryUrl.split(split);
                 String directoryName=files[files.length-1];
                 if(directoryName.contains(".")){continue;}
                 Integer categoryId=null;
@@ -68,7 +71,8 @@ public class ImportServiceImpl extends ServiceImpl<ImportDao, ImportEntity> impl
                 Integer tagId=null;
                 List<String> fileUrlList=FileUtils.getFiles(directoryUrl,true);
                 for (String fileUrl : fileUrlList) {
-                    String[] fileNames=fileUrl.split("\\\\");
+                    split=fileUrl.contains("/")?"/":"\\\\";
+                    String[] fileNames=fileUrl.split(split);
                     String fileName=fileNames[fileNames.length-1].split("\\.")[0];
                     try {
                         tagId=tagService.saveOrUpdateTag(
@@ -90,6 +94,8 @@ public class ImportServiceImpl extends ServiceImpl<ImportDao, ImportEntity> impl
                     Integer id=null;
                     List<String> tagNameList=new ArrayList<>();
                     tagNameList.add(fileName);
+                    //只存后半段
+                    fileUrl=fileUrl.replace(importFileUrl,"");
                     articleService.saveOrUpdateArticle(
                             ArticleVO.builder().articleContent(content).articleTitle(fileName)
                                     .articleCover(img).categoryName(directoryName)
