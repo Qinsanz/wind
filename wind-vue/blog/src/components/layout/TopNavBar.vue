@@ -23,6 +23,10 @@
       </div>
       <div class="float-right nav-title">
         <div class="menus-item">
+          <a href="https://www.music.qinsanz.cn/" target="_blank">
+          <i class="iconfont iconqita" /> YesPlayMusic</a>
+        </div>
+        <div class="menus-item">
           <a class="menu-btn" @click="openSearch">
             <i class="iconfont iconsousuo" /> 搜索
           </a>
