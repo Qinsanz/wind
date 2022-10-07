@@ -33,6 +33,14 @@ public enum FilePathEnum {
      */
     IMG("img/","PicGo路径"),
     /**
+     * TMP  临时路径
+     */
+    TMP("tmp/","临时路径"),
+    /**
+     * Excel  Excel路径
+     */
+    EXCEL("excel/","Excel路径"),
+    /**
      * 配置图片路径
      */
     CONFIG("config/","配置图片路径"),

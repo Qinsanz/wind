@@ -24,6 +24,12 @@ public class UploadStrategyContext {
     @Value("${upload.mode}")
     private String uploadMode;
 
+    /**
+     * 文件路径  todo  兼容上传模式
+     */
+    @Value("${upload.local.path}")
+    private String uploadPath;
+
     @Autowired
     private Map<String, UploadStrategy> uploadStrategyMap;
 
@@ -38,5 +44,24 @@ public class UploadStrategyContext {
         return uploadStrategyMap.get(UploadModeEnum.getStrategy(uploadMode)).uploadFile(file, path);
     }
 
+
+    /**
+     * 文件查询
+     * @param fileId 文件id或者路径
+     * @return
+     */
+    public String getFilePath(String fileId) {
+        //todo
+        return fileId;
+    }
+
+    /**
+     * 文件完整路径
+     * @param path 部分路径
+     * @return
+     */
+    public String getUploadPath(String path) {
+        return (uploadPath+"\\"+path).replace("\\","/");
+    }
 
 }

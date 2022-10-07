@@ -3,7 +3,9 @@ package com.worth.wind.common.util;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.poi.util.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.*;
 import java.security.MessageDigest;
@@ -80,6 +82,25 @@ public class FileUtils {
             e.printStackTrace();
         }
         return file;
+    }
+
+    /**
+     * file转换为MultipartFile
+     *
+     * @param file 文件
+     * @return MultipartFile
+     */
+    public static MultipartFile getMultipartFile(File file) {
+
+        InputStream input;
+        try {
+            input = new FileInputStream(file);
+            MockMultipartFile file1 = new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
+            input.close();
+            return file1;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
 

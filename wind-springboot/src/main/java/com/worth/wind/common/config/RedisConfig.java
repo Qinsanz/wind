@@ -3,6 +3,10 @@ package com.worth.wind.common.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -39,6 +43,31 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
+    }
+
+    @Value("${spring.redis.database}")
+    private int database;
+    @Value("${spring.redis.host}")
+    private String host;
+    /**
+     * Redis服务器登录密码
+     */
+    @Value("${spring.redis.password}")
+    private String password;
+    /**
+     * Redis服务器端口
+     */
+    @Value("${spring.redis.port}")
+    private int port;
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        if (password != null && !"".equals(password)) {
+            config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(password).setDatabase(database);
+        } else {
+            config.useSingleServer().setAddress("redis://" + host + ":" + port).setDatabase(database);
+        }
+        return Redisson.create(config);
     }
 
 }

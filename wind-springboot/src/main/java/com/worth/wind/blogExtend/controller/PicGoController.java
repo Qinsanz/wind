@@ -1,6 +1,7 @@
 package com.worth.wind.blogExtend.controller;
 
 import com.worth.wind.blog.enums.FilePathEnum;
+import com.worth.wind.blogExtend.constant.ExtendConstant;
 import com.worth.wind.common.strategy.context.UploadStrategyContext;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class PicGoController {
     @PostMapping("/picgo")
     @ResponseBody
     public String picGoUpload(MultipartFile img, String key){
+        if(!ExtendConstant.PIC_GO_KEY.equalsIgnoreCase(key)){
+            return ExtendConstant.PIC_GO_ERROR_IMG_URL;
+        }
         //判断key是否合法
         //转存图片
         //返回图片的网络路径
